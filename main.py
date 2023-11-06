@@ -2,62 +2,28 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-def cargar_datos(file_path):
-    try:
-        # Intenta cargar el archivo CSV
-        df = pd.read_csv('C:\Users\reino\OneDrive\Escritorio\ITB\Segon\S.experts\MeteoCat\2022_MeteoCat_Detall_Estacions.csv', sep=';') 
-        return df
-    except Exception as e:
-        # Captura cualquier excepción y muestra un mensaje de error
-        print(f"Error al cargar el archivo {file_path}: {str(e)}")
-        return None
-
-def ejercicio_2():
-    # Ejercicio 2: Cargar Datos
-    df1 = cargar_datos('2022_MeteoCat_Detall_Estacions.csv')
-    df2 = cargar_datos('2020_MeteoCat_Estacions.csv')
-    df3 = cargar_datos('MeteoCat_Metadades.csv')
-    
-    # Realizar operaciones con los DataFrames según sea necesario
+meteoCat2020:DataFrame
+meteoCat2022:DataFrame
+meteoCat_Metadades:DataFrame
 
 
-def ejercicio_3():
-    # Ejercicio 3: Visualizar Temperatura en Febrero
-    df = cargar_datos('2022_MeteoCat_Detall_Estacions.csv')
+def load_data():
+    global meteoCat2020 
+    global meteoCat2022
+    global meteoCat_Metadades
 
-    # Filtrar los datos para febrero de 2022
-    febrero_data = df[df['DATA_LECTURA'].str.startswith('2022-02')]
+    meteoCat2020 = pd.read_csv("MeteoCat_Estacions_2020.csv")
+    meteoCat2022 = pd.read_csv("2022_MeteoCat_Detall_Estacions.csv")
+    meteoCat_Metadades = pd.read_csv("MeteoCat_Metadades.csv")
 
-    # Calcular la temperatura media diaria
-    temperatura_media_diaria = febrero_data.groupby('DATA_LECTURA')['VALOR'].mean()
+# Temperatura media de febrero de 2020
+def avg_temp_February():
+    df = meteoCat2020[['DATA_LECTURA'] == "2022-02",] 
 
-    # Crear un gráfico de temperatura
-    plt.figure(figsize=(10, 6))
-    plt.plot(temperatura_media_diaria.index, temperatura_media_diaria.values)
-    plt.xlabel('Días de Febrero 2022')
-    plt.ylabel('Temperatura Media')
-    plt.title('Temperatura Media Diaria en Febrero 2022')
-    plt.xticks(rotation=45)
-    plt.show()
 
-def ejercicio_4():
-    # Ejercicio 4: Predicción de Temperatura en Febrero 2023
-    # Aquí deberías implementar un modelo de predicción basado en datos históricos.
-    pass
+def avg_temp_February2():
+    df = meteoCat2020[meteoCat2020['Mes'] == 2,]
 
-def ejercicio_5():
-    # Ejercicio 5: Predicción de Lluvia en Febrero 2023
-    probabilidad_lluvia = 0.20
-    dias = 28  # Número de días en febrero
-    lluvia = np.random.choice([True, False], size=dias, p=[probabilidad_lluvia, 1 - probabilidad_lluvia])
-
-    # Crear un gráfico de barras para visualizar la proporción de días con lluvia y sin lluvia
-    plt.figure(figsize=(6, 4))
-    plt.bar(['Días con lluvia', 'Días sin lluvia'], [sum(lluvia), dias - sum(lluvia)])
-    plt.xlabel('Lluvia')
-    plt.ylabel('Cantidad de Días')
-    plt.title('Predicción de Lluvia en Febrero 2023')
-    plt.show()
 
 def main():
     while True:
@@ -70,7 +36,7 @@ def main():
         opcion = input("Ingresa el número del ejercicio: ")
 
         if opcion == '1':
-            ejercicio_2()
+            load_data()
         elif opcion == '2':
             ejercicio_3()
         elif opcion == '3':
