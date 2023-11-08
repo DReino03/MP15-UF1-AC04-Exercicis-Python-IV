@@ -1,29 +1,62 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
-meteoCat2020:DataFrame
-meteoCat2022:DataFrame
-meteoCat_Metadades:DataFrame
+import csv
 
 
-def load_data():
-    global meteoCat2020 
-    global meteoCat2022
-    global meteoCat_Metadades
+def load_data(file_name):
+    file = open(file_name, "r")
+    reader = csv.reader(file)
+    header = next(reader)
+    data = [ row for row in reader ]
+    array = np.array(list(data))
+    file.close()
+    return array
 
-    meteoCat2020 = pd.read_csv("MeteoCat_Estacions_2020.csv")
-    meteoCat2022 = pd.read_csv("2022_MeteoCat_Detall_Estacions.csv")
-    meteoCat_Metadades = pd.read_csv("MeteoCat_Metadades.csv")
+estacions = load_data("MeteoCat_Estacions_2020.csv")
+detall = load_data("2022_MeteoCat_Detall_Estacions.csv")
+metadata = load_data("MeteoCat_Metadades.csv")
+
+
+#Calculate avg with acronim
+def calculate_avg(valor:str) -> list:
+    day = {}
+    for row in detall:
+        date = row[0]
+        acronim = row[3]
+        day = date.split("-")[2]
+        month = date.split("-")[1]
+
+        if month == "02" and acronim == valor.upper():
+            num_day = int(day)
+            value = float(row[4])
+            if num_day not in day:
+                day[num_day] = []
+            day[num_day].append(value)
+    avg = []
+    for dia, value in day.items():
+        avg = sum(value) / len(value)
+        avg.append((dia, avg))
+                
+    return avg
+
 
 # Temperatura media de febrero de 2020
 def avg_temp_February():
-    df = meteoCat2020[['DATA_LECTURA'] == "2022-02",] 
+    avg =  calculate_avg("TM")
+    print(np.array(avg))
+    plt.plot(np.array(avg)[:,0], np.array(avg)[:,1])
+    plt.ylabel("Temperatura ºC")
+    plt.xlabel("Día")
+    plt.xticks(range(1,29))
+    plt.title("Temperatura media de febrero de 2020")
+    plt.show()
 
-
-def avg_temp_February2():
-    df = meteoCat2020[meteoCat2020['Mes'] == 2,]
-
+def predict_temp_February_2023():
+    
+    avg = calculate_avg("TM")
+    temp_feb_2022 = np.array(avg)[:,1]
+    
 
 def main():
     while True:
@@ -38,11 +71,10 @@ def main():
         if opcion == '1':
             load_data()
         elif opcion == '2':
-            ejercicio_3()
+            print(avg_temp_February())
         elif opcion == '3':
-            ejercicio_4()
+
         elif opcion == '4':
-            ejercicio_5()
         elif opcion == '5':
             print("¡Adiós!")
             break
