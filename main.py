@@ -18,6 +18,7 @@ metadata = load_data("./MeteoCat_Metadades.csv")
 
 # Temperatura media de febrero de 2020
 def avg_temp_February():
+    """
     avg =  calculate_avg("TM")
     plt.plot(np.array(avg)[:,0], np.array(avg)[:,1])
     plt.xlabel('Days')
@@ -25,15 +26,33 @@ def avg_temp_February():
     plt.title('Media diaria de febrero')
     plt.tight_layout()
     plt.show()
-    '''
-    print(np.array(avg))
-    plt.plot(np.array(avg)[:,0], np.array(avg)[:,1])
-    plt.ylabel("Temperatura ºC")
-    plt.xlabel("Día")
-    plt.xticks(range(1,29))
-    plt.title("Temperatura media de febrero de 2020")
+    """
+
+    detall['DATA_LECTURA'] = pd.to_datetime(detall['DATA_LECTURA'])
+
+    february_data = detall[
+        (detall['DATA_LECTURA'].dt.month == 2) &
+        (detall['DATA_LECTURA'].dt.year == 2022) &
+        (detall['ACRÒNIM'] == 'TM')]
+
+    temperatures_per_station = february_data.groupby(['CODI_ESTACIO', february_data['DATA_LECTURA'].dt.day])['VALOR'].mean().unstack(level=0)
+
+     # Part 1
+    plt.figure(figsize=(10, 6))
+    for station in temperatures_per_station.columns:
+        plt.plot(temperatures_per_station.index, temperatures_per_station[station], label=f'Estación {station}',
+                 marker='o')
+    plt.xlabel('Días de Febrero')
+    plt.ylabel('Temperatura media diaria')
+    plt.title('Comparativa de Temperatura Media Diaria - Febrero 2022')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.xticks(temperatures_per_station.index)
     plt.show()
-    '''
+
+
+    
 
 #Calculate avg with acronim
 def calculate_avg(average:str) -> list:
@@ -81,7 +100,7 @@ def main():
             print("Datos cargados correctamente.")
             
         elif opcion == '2':
-            calculate_avg("TM")
+            avg_temp_February()
 
         elif opcion == '3':
             print("¡Adiós!")
