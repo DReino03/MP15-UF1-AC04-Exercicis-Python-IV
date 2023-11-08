@@ -19,12 +19,10 @@ metadata = load_data("./MeteoCat_Metadades.csv")
 # Temperatura media de febrero de 2020
 def avg_temp_February():
     avg =  calculate_avg("TM")
-    plt.plot(avg)
+    plt.plot(np.array(avg)[:,0], np.array(avg)[:,1])
     plt.xlabel('Days')
     plt.ylabel('Temperature')
     plt.title('Media diaria de febrero')
-    plt.legend()
-    plt.grid(True)
     plt.tight_layout()
     plt.show()
     '''
@@ -53,9 +51,9 @@ def calculate_avg(average:str) -> list:
                 days[num_day] = []
             days[num_day].append(value)
     avg = []
-    for dia, value in days.items():
-        avg = sum(value) / len(value)
-        avg.append((dia, avg))
+    for dia, values in days.items():
+        avgs = sum(values) / len(values)
+        avg.append((dia, avgs))
                 
     return avg
 
@@ -83,7 +81,7 @@ def main():
             print("Datos cargados correctamente.")
             
         elif opcion == '2':
-            avg_temp_February()
+            calculate_avg("TM")
 
         elif opcion == '3':
             print("¡Adiós!")
