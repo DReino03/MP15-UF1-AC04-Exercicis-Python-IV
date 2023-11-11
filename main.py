@@ -2,6 +2,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+"""
+GRUPO:
+ - Oscar Perona
+ - Lorenzo Poderoso
+ - Daniel Reinosa
+"""
+
 
 def load_datas(path):
     return pd.read_csv(path, header=0)
@@ -32,8 +39,8 @@ february_rain_data_2022 = stationDataDetail[
     ]
 
 february_rain_per_station = \
-february_rain_data_2022.groupby(['CODI_ESTACIO', february_rain_data_2022['DATA_LECTURA'].dt.day])[
-    'VALOR'].mean().unstack(level=0)
+    february_rain_data_2022.groupby(['CODI_ESTACIO', february_rain_data_2022['DATA_LECTURA'].dt.day])[
+        'VALOR'].mean().unstack(level=0)
 
 daily_rain = february_rain_per_station.median(axis=1)
 
